@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Prikaz signala</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+  <canvas id="chart"></canvas>
+
+  <script>
+    // Dobijanje podataka iz Python skripte
+    var ppgSignals = {{ ppg_signals|tojson }};
+
+    // Ovde možete dodati JavaScript kod za obradu i prikaz signala
+
+    // Primer prikaza signala
+    for (var i = 0; i < ppgSignals.length; i++) {
+      var signal = ppgSignals[i];
+      var label = 'Signal ' + (i + 1);
+
+      var ctx = document.getElementById('chart-' + i).getContext('2d');
+
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: Array.from({ length: signal.length }, (_, i) => i + 1),
+          datasets: [
+            {
+              label: label,
+              data: signal,
+              borderColor: getRandomColor(),
+              fill: false
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          title: {
+            display: true,
+            text: 'Prikaz signala'
+          },
+          scales: {
+            x: {
+              title: {
+                display: true,
+                text: 'Vreme'
+              }
+            },
+            y: {
+              title: {
+                display: true,
+                text: 'Amplituda'
+              }
+            }
+          }
+        }
+      });
+    }
+
+    // Funkcija za generisanje nasumične boje
+    function getRandomColor() {
+      var letters = '0123456789ABCDEF';
+      var color = '#';
+      for (var i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    }
+  </script>
+</body>
+</html>
